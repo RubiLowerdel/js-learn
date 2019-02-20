@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', () =>{
 
-const cartWrapper = 		document.querySelector('.cart__wrapper'),
+const cartWrapper = document.querySelector('.cart__wrapper'),
 	  cart = document.querySelector('.cart'),
 	  close = document.querySelector('.cart__close'),
 	  open = document.querySelector('#cart'),
@@ -22,6 +22,7 @@ function closeCart() {
 open.addEventListener('click', openCart);
 close.addEventListener('click', closeCart);
 
+
 goodsBtn.forEach(function(btn,i) {
 	btn.addEventListener('click', () => {
 		 let item = products[i].cloneNode(true),
@@ -35,12 +36,83 @@ goodsBtn.forEach(function(btn,i) {
 		removeBtn.innerHTML = '&times';
 		item.appendChild(removeBtn);
 		
+		showConfirm();
+		calcGoods(1);
+		
 		cartWrapper.appendChild(item);
 		if (empty) {
 			empty.remove();
 		}
-		
+		calcTotal();
+		removeFromCart();
 	});
 });
-
-})
+function sliceTitle() {
+		titles.forEach(function(item){
+			if (item.textContent.length< 70){
+				return;
+			} else {
+				const str = item.textContent.slice(0, 71) + '...';
+				item.textContent = str;
+			
+		}
+	});
+	}
+sliceTitle();
+	
+	
+	
+	function showConfirm() {
+		confirm.style.display = 'block';
+		let counter = 100;
+		const id = setInterval(frame, 10);
+		function frame() {
+			if (counter == 10) {
+				clearInterval(id);
+				confirm.style.display = 'none';
+			} else{
+			counter--;
+			confirm.style.transform = `translateY(-${counter}px)`;
+			confirm.style.opacity = '.' + counter;
+			}
+		}
+	}
+	
+	function calcGoods(i){
+		const items = cartWrapper.querySelectorAll('.goods__item');
+		if (items.length == 0) {
+			returnTextMessage();
+		}
+		badge.textContent = i + items.length;
+		
+	}
+	
+	function calcTotal(){
+		const prices = document.querySelectorAll('.cart__wrapper > .goods__item > .goods__price > span');
+		let total = 0;
+		prices.forEach (function(item){
+						total += +item.textContent;
+						})
+		totalCost.textContent = total;
+	}
+	function removeFromCart() {
+		const removeBtn = cartWrapper.querySelectorAll('.goods__item-remove');
+		removeBtn.forEach(function(btn) {
+			btn.addEventListener('click', () => {
+				btn.parentElement.remove();
+				calcGoods(0);
+				calcTotal();
+				if (calcGoods(0)) {
+					
+				}
+			});
+		});
+	}
+	function returnTextMessage() {
+		let message = document.createElement('div');
+		message.classList.add('empty');
+		message.innerText = 'Ваша корзина пока пуста';
+		cartWrapper.appendChild(message);
+	}
+	
+});
