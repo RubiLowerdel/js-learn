@@ -120,8 +120,6 @@ window.addEventListener('DOMContentLoaded', () =>{
            total += +item.textContent;
         });
         totalCost.textContent = total;
-
-        // Домашка второго дня
         
         let empty = cartWrapper.querySelector('.empty');
         if (total == 0) {
